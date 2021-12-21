@@ -34,16 +34,20 @@ public class CatFactsApi {
         Use the WebClient to make the request, converting the response to String.class.
         This request doesn't require url parameters, so you can omit the .uri() method call entirely
         */
-
+        Mono<String> stringMono = webClient
+                .get()
+                .retrieve()
+                .bodyToMono(String.class);
 
         //Collect the response from the Mono object
+        String response = stringMono.block();
 
 
         /*
         Print out the actual JSON response -
         this is what you will input into jsonschema2pojo.com
          */
-
+        System.out.println(response);
 
         /*
         Use http://www.jsonschema2pojo.org/ to generate your POJO
@@ -54,26 +58,30 @@ public class CatFactsApi {
         Source Type = JSON
         Annotation Style = Gson
         */
+
     }
 
     public String getCatFact() {
 
         //Make the request, saving the response in an object of the type that you just created in your
         //data_transfer_objects package (CatWrapper)
-
+        Mono<CatWrapper> catWrapper = webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("q", "cat")
+                        .build())
+                .retrieve()
+                .bodyToMono(CatWrapper.class);
         //Use block() to collect the response into a java object using the class you just created
-
         //return the Object
-        return null;
-
-
+        return catWrapper.block().getData().get(0);
     }
 
-    public String findCatFact(){
+    public String findCatFact() {
         //use the getCatFact method to retrieve a cat fact
 
         //return the first (and only) String in the Arraylist of data in the response
-        return null;
+        return getCatFact();
     }
 
     public void setWebClient(WebClient webClient) {
