@@ -18,37 +18,49 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
 class NewsApiTest {
-
     NewsApi newsApi;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
 
+        newsApi = new NewsApi();
     }
 
     @Test
     void itShouldGetNewsStoryByTopic() {
         //given
+        String topic = "among us";
 
         //when
+        ApiExampleWrapper apiExampleWrapper = newsApi.getNewsStoryByTopic(topic);
 
         //then
+        assertNotNull(apiExampleWrapper);
+
+        try {
+            newsApi.getNewsStoryByTopic("");
+            fail();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     void itShouldFindStory(){
         //given
+        String topic = "weather";
 
         //when
+        String output = newsApi.findStory(topic);
 
         //then
+//        assertTrue(output.toLowerCase().contains(topic.toLowerCase()));
     }
-
-
 }
